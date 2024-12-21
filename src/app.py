@@ -8,16 +8,19 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///health.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# 定義資料模型
-# 新增修改自己負責的部分
-# User, HealthData, DietData, SleepData, ExerciseData, goal, medical history
+#########################################################
+### 定義資料模型
+### 新增修改自己負責的部分，這個部分已經寫好的是gpt產生的範例，有幾個還沒完成要自己修改跟新增
+### User, HealthData, DietData, SleepData, ExerciseData, goal, medical history
+#########################################################
 
+### 待完成
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)  # 密碼作為普通屬性
     
-
+### 待完成
 class HealthData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -25,6 +28,7 @@ class HealthData(db.Model):
     heart_rate = db.Column(db.String(20))
     weight = db.Column(db.Float)
 
+### 待完成
 class DietData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -32,19 +36,15 @@ class DietData(db.Model):
     calories = db.Column(db.Integer)
     notes = db.Column(db.String(100))
 
+### 待完成
 class SleepData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     sleep_hours = db.Column(db.Float)
     sleep_quality = db.Column(db.String(20))  # 好/中/差
 
-# 
-#
-#
-#
-#
-#
-#
+### 待完成...... 
+
 
 
 # 初始化資料庫
@@ -52,6 +52,11 @@ with app.app_context():
     db.create_all()
 
 #########################################################
+### 這裡每一個模塊是大家要分工要寫的
+### User, HealthData, DietData, SleepData, ExerciseData, goal, medical history
+### 
+#########################################################
+
 # 首頁（登入頁面）
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -130,7 +135,7 @@ def delete_health(health_id):
     return redirect(url_for('view_health', user_id=user_id))
 
 #########################################################
-# 新增飲食資料
+# 新增飲食資料(gpt產生的範例)
 # 
 @app.route('/add_diet/<int:user_id>', methods=['GET', 'POST'])
 def add_diet(user_id):
@@ -145,7 +150,9 @@ def add_diet(user_id):
         return redirect(url_for('dashboard', user_id=user_id))
     return render_template('add_diet.html')
 
-# 新增睡眠資料
+
+#########################################################
+# 新增睡眠資料(gpt產生的範例)
 @app.route('/add_sleep/<int:user_id>', methods=['GET', 'POST'])
 def add_sleep(user_id):
     if request.method == 'POST':
@@ -159,7 +166,7 @@ def add_sleep(user_id):
     return render_template('add_sleep.html')
 
 #########################################################
-
+### 待完成...... 
 
 
 
