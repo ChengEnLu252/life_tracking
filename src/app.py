@@ -9,10 +9,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # 定義資料模型
+# 新增修改自己負責的部分
+# User, HealthData, DietData, SleepData, ExerciseData, goal, medical history
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)  # 密碼作為普通屬性
+    
 
 class HealthData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -34,10 +38,20 @@ class SleepData(db.Model):
     sleep_hours = db.Column(db.Float)
     sleep_quality = db.Column(db.String(20))  # 好/中/差
 
+# 
+#
+#
+#
+#
+#
+#
+
+
 # 初始化資料庫
 with app.app_context():
     db.create_all()
 
+#########################################################
 # 首頁（登入頁面）
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -72,6 +86,8 @@ def register():
 def dashboard(user_id):
     return render_template('dashboard.html', user_id=user_id)
 
+
+#########################################################
 # 新增健康資料
 @app.route('/add_health/<int:user_id>', methods=['GET', 'POST'])
 def add_health(user_id):
@@ -86,34 +102,6 @@ def add_health(user_id):
         return redirect(url_for('dashboard', user_id=user_id))
     return render_template('add_health.html')
 
-# 新增飲食資料
-@app.route('/add_diet/<int:user_id>', methods=['GET', 'POST'])
-def add_diet(user_id):
-    if request.method == 'POST':
-        meal_type = request.form['meal_type']
-        calories = request.form['calories']
-        notes = request.form['notes']
-
-        new_diet = DietData(user_id=user_id, meal_type=meal_type, calories=calories, notes=notes)
-        db.session.add(new_diet)
-        db.session.commit()
-        return redirect(url_for('dashboard', user_id=user_id))
-    return render_template('add_diet.html')
-
-# 新增睡眠資料
-@app.route('/add_sleep/<int:user_id>', methods=['GET', 'POST'])
-def add_sleep(user_id):
-    if request.method == 'POST':
-        sleep_hours = request.form['sleep_hours']
-        sleep_quality = request.form['sleep_quality']
-
-        new_sleep = SleepData(user_id=user_id, sleep_hours=sleep_hours, sleep_quality=sleep_quality)
-        db.session.add(new_sleep)
-        db.session.commit()
-        return redirect(url_for('dashboard', user_id=user_id))
-    return render_template('add_sleep.html')
-
-#########################
 # 查看健康資料
 @app.route('/view_health/<int:user_id>')
 def view_health(user_id):
@@ -141,5 +129,41 @@ def delete_health(health_id):
     db.session.commit()
     return redirect(url_for('view_health', user_id=user_id))
 
+#########################################################
+# 新增飲食資料
+# 
+@app.route('/add_diet/<int:user_id>', methods=['GET', 'POST'])
+def add_diet(user_id):
+    if request.method == 'POST':
+        meal_type = request.form['meal_type']
+        calories = request.form['calories']
+        notes = request.form['notes']
+
+        new_diet = DietData(user_id=user_id, meal_type=meal_type, calories=calories, notes=notes)
+        db.session.add(new_diet)
+        db.session.commit()
+        return redirect(url_for('dashboard', user_id=user_id))
+    return render_template('add_diet.html')
+
+# 新增睡眠資料
+@app.route('/add_sleep/<int:user_id>', methods=['GET', 'POST'])
+def add_sleep(user_id):
+    if request.method == 'POST':
+        sleep_hours = request.form['sleep_hours']
+        sleep_quality = request.form['sleep_quality']
+
+        new_sleep = SleepData(user_id=user_id, sleep_hours=sleep_hours, sleep_quality=sleep_quality)
+        db.session.add(new_sleep)
+        db.session.commit()
+        return redirect(url_for('dashboard', user_id=user_id))
+    return render_template('add_sleep.html')
+
+#########################################################
+
+
+
+
+
+#########################################################
 if __name__ == '__main__':
     app.run(debug=True)
